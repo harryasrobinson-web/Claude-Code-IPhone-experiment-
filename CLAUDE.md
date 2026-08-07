@@ -11,8 +11,10 @@ session (phone/web) picks it up on clone — `~/.claude` does not travel.
   writing-plans, executing-plans, verification-before-completion, subagent-driven-development,
   and friends. Pure methodology, no dependencies. **These work everywhere.**
 - **gstack-dependent** (43) — qa, browse, ship, investigate, make-pdf, design-*, plan-*, etc.
-  They shell out to `~/.claude/skills/gstack/bin/*`, which is **not installed**.
-  Run `/gstack-upgrade` or see SETUP-NOTES.md before relying on them.
+  gstack builds cleanly here but **cannot be committed** (its binaries exceed GitHub's
+  100MB file limit). Rebuild it in a fresh session with `bash .claude/bootstrap-gstack.sh`
+  (~3-4 min, idempotent). Until that runs, these skills are inert.
+  Browse-backed skills reach only allowlisted hosts — general web QA is unavailable.
 - **mem\*** (7) — belong to the claude-mem plugin, which is not installed here.
 
 ## Vault
