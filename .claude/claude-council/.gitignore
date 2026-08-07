@@ -1,0 +1,20 @@
+# Local settings with API keys
+.claude/*.local.md
+
+# Local commands (dev workflows)
+.claude/commands/
+
+# Response cache
+.claude/council-cache/
+
+# Issue tracker (personal)
+.beads/
+
+# OS files
+.DS_Store
+
+# Editor files
+*.swp
+*.swo
+*~
+autoresearch-results.tsv

@@ -1,0 +1,29 @@
+{
+  "model": "opus",
+  "effortLevel": "high",
+  "env": {
+    "BASH_MAX_OUTPUT_LENGTH": "10000",
+    "MAX_MCP_OUTPUT_TOKENS": "10000",
+    "CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING": "1"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(*)",
+      "Read(*)",
+      "Write(*)",
+      "Edit(*)",
+      "Glob(*)",
+      "Grep(*)",
+      "WebFetch(*)",
+      "WebSearch(*)",
+      "Agent(*)",
+      "Skill(*)"
+    ],
+    "deny": [
+      "Read(**/node_modules/**)",
+      "Read(**/*.min.js)",
+      "Read(**/*.min.css)",
+      "Read(**/*.map)"
+    ]
+  }
+}

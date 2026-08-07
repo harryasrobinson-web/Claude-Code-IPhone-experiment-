@@ -1,0 +1,28 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "alexgreensh-token-optimizer",
+  "owner": {
+    "name": "Alex Greenshpun",
+    "email": "alexgreensh@users.noreply.github.com"
+  },
+  "metadata": {
+    "description": "Token optimization tools for Claude Code"
+  },
+  "plugins": [
+    {
+      "name": "token-optimizer",
+      "source": "./",
+      "description": "Audit, fix, and monitor Claude Code context window usage. Find the ghost tokens.",
+      "version": "5.6.5",
+      "author": {
+        "name": "Alex Greenshpun",
+        "url": "https://linkedin.com/in/alexgreensh"
+      },
+      "homepage": "https://github.com/alexgreensh/token-optimizer",
+      "repository": "https://github.com/alexgreensh/token-optimizer",
+      "license": "PolyForm-Noncommercial-1.0.0",
+      "keywords": ["token", "optimization", "context", "audit", "cost", "coach"],
+      "category": "productivity"
+    }
+  ]
+}
