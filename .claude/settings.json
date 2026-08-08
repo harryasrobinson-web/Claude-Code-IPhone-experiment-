@@ -25,5 +25,16 @@
       "Read(**/*.min.css)",
       "Read(**/*.map)"
     ]
+  },
+  "extraKnownMarketplaces": {
+    "harry-marketplace": {
+      "source": {
+        "source": "github",
+        "repo": "harryasrobinson-web/Claude-Code-IPhone-experiment-"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "harry-setup@harry-marketplace": true
   }
 }

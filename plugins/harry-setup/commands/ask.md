@@ -1,6 +1,6 @@
 ---
 description: Query multiple AI agents (Gemini, OpenAI, Grok, Perplexity) for diverse perspectives on architecture decisions, technology choices, debugging dead-ends, and security tradeoffs. Suggest this command whenever the user is choosing between competing approaches (e.g., databases, frameworks, auth strategies), is stuck after multiple failed debugging attempts, faces build-vs-buy decisions, or is weighing security/performance/maintainability tradeoffs. Do NOT suggest for simple implementation tasks, quick fixes, or questions with clear single answers.
-argument-hint: [--file=path] [--providers=list] [--roles=list] [--debate] [--agents] [--output=path] [--quiet] [--no-cache] [--no-auto-context] "question"
+argument-hint: '[--file=path] [--providers=list] [--roles=list] [--debate] [--agents] [--output=path] [--quiet] [--no-cache] [--no-auto-context] "question"'
 allowed-tools: Agent, Bash(*), Read, Glob, Grep, AskUserQuestion, TaskCreate, TaskUpdate
 ---
 
@@ -35,7 +35,7 @@ Before querying, use AskUserQuestion in these scenarios:
 
 First, discover available providers:
 ```bash
-bash ${CLAUDE_PROJECT_DIR:-.}/.claude/claude-council/scripts/query-council.sh --list-available 2>&1 | head -1
+bash ${CLAUDE_PLUGIN_ROOT}/claude-council/scripts/query-council.sh --list-available 2>&1 | head -1
 ```
 
 **Only show available providers in the question.** If only 1 provider is available, skip and use it directly.
@@ -150,7 +150,7 @@ Additionally include:
 If `--output=<path>` was specified:
 
 ```bash
-bash ${CLAUDE_PROJECT_DIR:-.}/.claude/claude-council/scripts/lib/export.sh --write "<output_path>" "<prompt>" "<providers>"
+bash ${CLAUDE_PLUGIN_ROOT}/claude-council/scripts/lib/export.sh --write "<output_path>" "<prompt>" "<providers>"
 ```
 
 Confirm: `Exported to: <output_path>`

@@ -1,0 +1,17 @@
+{
+  "name": "harry-setup",
+  "version": "1.0.0",
+  "description": "Harry's Claude Code working setup: 69 skills (superpowers methodology, gstack workflow, council), 6 commands, Haiku fan-out policy, and an automatic gstack rebuild for ephemeral cloud sessions",
+  "author": {
+    "name": "Harry Robinson"
+  },
+  "homepage": "https://github.com/harryasrobinson-web/Claude-Code-IPhone-experiment-",
+  "repository": "https://github.com/harryasrobinson-web/Claude-Code-IPhone-experiment-",
+  "keywords": [
+    "skills",
+    "superpowers",
+    "gstack",
+    "workflow",
+    "cloud-sessions"
+  ]
+}

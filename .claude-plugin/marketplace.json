@@ -1,0 +1,18 @@
+{
+  "name": "harry-marketplace",
+  "description": "Harry Robinson's Claude Code setup, packaged so any session on any repo can install it by name",
+  "owner": {
+    "name": "Harry Robinson"
+  },
+  "plugins": [
+    {
+      "name": "harry-setup",
+      "description": "Harry's Claude Code working setup: 69 skills (superpowers methodology, gstack workflow, council), 6 commands, Haiku fan-out policy, and an automatic gstack rebuild for ephemeral cloud sessions",
+      "version": "1.0.0",
+      "source": "./plugins/harry-setup",
+      "author": {
+        "name": "Harry Robinson"
+      }
+    }
+  ]
+}

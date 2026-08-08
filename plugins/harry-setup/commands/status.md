@@ -10,7 +10,7 @@ Check the status of all configured AI providers.
 Run the status check script:
 
 ```bash
-bash ${CLAUDE_PROJECT_DIR:-.}/.claude/claude-council/scripts/check-status.sh
+bash ${CLAUDE_PLUGIN_ROOT}/claude-council/scripts/check-status.sh
 ```
 
 ## Output

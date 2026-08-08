@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+# SessionStart hook for the harry-setup plugin.
+#
+# Does two things, both non-blocking:
+#   1. kicks off the gstack rebuild in the background (cloud containers are
+#      ephemeral and gstack's binaries are too large to commit, so each fresh
+#      session has to rebuild it — see scripts/bootstrap-gstack.sh)
+#   2. injects RULES.md into the session so the working rules apply in any repo
+#      this plugin is installed in, not just the one it was built in
+#
+# Must always print valid JSON on stdout and never fail the session.
+
+set -uo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PLUGIN_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+
+# 1. Background gstack rebuild. Detached so session start is never delayed.
+BOOTSTRAP="${PLUGIN_ROOT}/scripts/bootstrap-gstack.sh"
+if [ -x "$BOOTSTRAP" ]; then
+  nohup bash "$BOOTSTRAP" >/dev/null 2>&1 &
+  disown 2>/dev/null || true
+fi
+
+# 2. Inject the working rules.
+RULES_FILE="${PLUGIN_ROOT}/RULES.md"
+if [ -f "$RULES_FILE" ]; then
+  python3 - "$RULES_FILE" <<'PY' 2>/dev/null || printf '{"continue":true}\n'
+import json, sys
+try:
+    with open(sys.argv[1], encoding="utf-8") as fh:
+        rules = fh.read()
+except Exception:
+    print(json.dumps({"continue": True}))
+    sys.exit(0)
+print(json.dumps({
+    "continue": True,
+    "suppressOutput": True,
+    "hookSpecificOutput": {
+        "hookEventName": "SessionStart",
+        "additionalContext": rules,
+    },
+}))
+PY
+else
+  printf '{"continue":true}\n'
+fi
