@@ -1,0 +1,100 @@
+name: Voice Claude
+
+# Woken by the iPhone Shortcut (see voice/PHONE-SETUP.md), which sends a
+# repository_dispatch event carrying the dictated text.
+on:
+  repository_dispatch:
+    types: [voice]
+
+# One voice request at a time; a second one queues behind the first.
+concurrency:
+  group: voice-claude
+
+permissions:
+  contents: write
+
+jobs:
+  respond:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Install Claude Code
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Ask Claude
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          VOICE_TEXT: ${{ github.event.client_payload.text }}
+        run: |
+          if [ -z "$VOICE_TEXT" ]; then
+            echo "The Shortcut sent no text — check its client_payload." > /tmp/reply.txt
+            exit 1
+          fi
+          cat > /tmp/prompt.txt <<'WRAPPER'
+          You are Claude Code running headless in a GitHub Actions runner. Harry
+          spoke the request below into his iPhone, usually while driving or
+          walking, and Siri transcribed it. Dictation is imperfect: fix obvious
+          mis-hearings and interpret his intent charitably.
+
+          How to handle it:
+          - A note, idea, reminder, or thought to log: append it to
+            notes/inbox.md under a "## YYYY-MM-DD" heading for today (create the
+            heading if it is missing), lightly cleaned up but in his words.
+          - A question: answer it in your reply and change no files.
+          - A coding or build task: do the work here in the repo.
+
+          Rules:
+          - Do NOT run git commit or git push. The workflow saves your changes.
+          - Your final reply is read ALOUD to Harry through his AirPods as a
+            notification. Keep it under 400 characters of plain spoken English —
+            no markdown, no code, no URLs. Lead with the outcome.
+
+          The transcribed request is:
+          WRAPPER
+          printf '%s\n' "$VOICE_TEXT" >> /tmp/prompt.txt
+          claude -p --model claude-sonnet-5 --dangerously-skip-permissions \
+            < /tmp/prompt.txt | tee /tmp/reply.txt
+
+      - name: Save any changes Claude made
+        env:
+          VOICE_TEXT: ${{ github.event.client_payload.text }}
+        run: |
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "No file changes to save."
+            exit 0
+          fi
+          git config user.name "Claude (voice)"
+          git config user.email "claude-voice@users.noreply.github.com"
+          SUMMARY=$(printf '%s' "$VOICE_TEXT" | tr '\n' ' ' | head -c 60)
+          if git status --porcelain | awk '{print $NF}' | grep -qv '^notes/'; then
+            BRANCH="voice/run-${GITHUB_RUN_ID}"
+            git checkout -b "$BRANCH"
+            git add -A
+            git commit -m "Voice task: $SUMMARY"
+            git push -u origin "$BRANCH"
+          else
+            git add -A
+            git commit -m "Voice note: $SUMMARY"
+            git push
+          fi
+
+      - name: Send the reply to the phone
+        if: always()
+        env:
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+        run: |
+          if [ -z "$NTFY_TOPIC" ]; then
+            echo "No NTFY_TOPIC secret set; skipping the phone notification."
+            exit 0
+          fi
+          if [ -s /tmp/reply.txt ]; then
+            head -c 900 /tmp/reply.txt | \
+              curl -s -H "Title: Claude" --data-binary @- "https://ntfy.sh/$NTFY_TOPIC"
+          else
+            printf 'That request failed before Claude could reply — the Actions tab on GitHub has the details.' | \
+              curl -s -H "Title: Claude" --data-binary @- "https://ntfy.sh/$NTFY_TOPIC"
+          fi

@@ -54,6 +54,14 @@ plugins/harry-setup/                the plugin — single source of truth
 Edit the setup under `plugins/harry-setup/`. Bump the version in **both**
 `plugin.json` and `marketplace.json` — `claude plugin validate .` checks they agree.
 
+## Voice: "Hey Siri, Claude"
+
+The repo also carries a hands-free voice pipeline for the iPhone: a Siri
+Shortcut sends dictated requests here, a GitHub Actions workflow runs Claude
+Code on them in the cloud, notes land in `notes/inbox.md`, and the reply is
+read aloud on the phone via ntfy. Design and honest limitations:
+`voice/README.md`. One-time phone setup: `voice/PHONE-SETUP.md`.
+
 ## Known limits in cloud sessions
 
 - `/ask` needs a Gemini API key; OpenAI, Kimi, x.ai and Perplexity are network-blocked.
