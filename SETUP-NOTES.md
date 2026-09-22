@@ -9,13 +9,36 @@ so the pack was ported **into the repo** — that's the only thing that persists
 
 | Component | Notes |
 |---|---|
-| `.claude/skills/` (69) | Copied verbatim. The 13 `superpowers*` skills are fully functional. |
+| `.claude/skills/` (69, now 62) | Copied verbatim. The 14 `superpowers*` skills are fully functional. The 7 inert `mem*` skills were later removed (see below). |
 | `.claude/commands/` (6) | Windows paths rewritten to `${CLAUDE_PROJECT_DIR:-.}/.claude/...`. |
 | `.claude/settings.json` | Rewritten, JSON-validated. |
 | `CLAUDE.md` | Adapted to what's actually present. |
 | `.claude/vault/` | Created fresh (Stage 4 of the bootstrap prompt). |
 | exec bits | Windows zip stripped them; restored on 54 scripts. |
 | **gstack** | **Installs and runs.** See below. |
+
+## Performance cleanup (v1.1.0, Sep 2026)
+
+After sessions ballooned in context, burned through usage limits and appeared to
+hang, the plugin was trimmed:
+
+- **7 `mem*` skills removed.** They belonged to claude-mem, which was never
+  installed. They did nothing except add their descriptions to every session.
+  69 skills → 62.
+- **"Proactively invoke/suggest" removed from 20 gstack skill descriptions.**
+  `ship` (169KB), `office-hours` (128KB) and `investigate` (64KB) told Claude to
+  invoke them *instead of* answering directly whenever you mentioned pushing code,
+  reported a bug or floated an idea. Each such trigger dumped tens of thousands of
+  tokens into context. Their "use when asked to…" trigger phrases are kept.
+- **Forced maximum reasoning removed from `.claude/settings.json`.** `effortLevel: high`
+  and `CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING=1` made every request, however trivial,
+  think at full depth on Opus. Claude Code's defaults now apply. `model: opus` is kept.
+- **RULES.md** now says not to spawn subagents for small jobs and not to reach
+  for the heavy gstack skills as a reflex.
+
+These changes reach the plugin's installs on the next session. Your laptop's own
+`~/.claude` (the original Windows starter pack and its ~40 hooks) is separate and
+is **not** changed by this repo.
 
 ## gstack — verified working
 

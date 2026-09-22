@@ -1,7 +1,7 @@
 # Harry's Claude Code setup
 
 This repo is a **Claude Code plugin marketplace**. It serves one plugin,
-`harry-setup`, containing 69 skills, 6 commands, the working rules, and an
+`harry-setup`, containing 62 skills, 6 commands, the working rules, and an
 automatic gstack rebuild for cloud sessions.
 
 ## Using it in a new project
@@ -27,13 +27,15 @@ claude plugin install harry-setup@harry-marketplace
 
 | | |
 |---|---|
-| **13 superpowers skills** | brainstorming, systematic-debugging, TDD, writing/executing plans, verification-before-completion, subagent-driven-development. No dependencies — work everywhere. |
-| **43 gstack skills** | `/qa`, `/investigate`, `/ship`, `/spec`, `/office-hours`, `/make-pdf`, design and plan reviews. Rebuilt automatically in the background at session start (~3-4 min on a fresh container). |
+| **14 superpowers skills** | brainstorming, systematic-debugging, TDD, writing/executing plans, verification-before-completion, subagent-driven-development. No dependencies — work everywhere. |
+| **44 gstack skills** | `/qa`, `/investigate`, `/ship`, `/spec`, `/office-hours`, `/make-pdf`, design and plan reviews. Rebuilt automatically in the background at session start (~3-4 min on a fresh container). |
 | **6 commands** | `/ask`, `/status`, token-optimizer tools. |
 | **Working rules** | Injected each session — Haiku fan-out policy, when to reach for `/ask`, act-don't-ask preferences. |
 
-Always-on context cost: **~9,400 tokens** per session. Individual skills load
-only when invoked.
+Always-on context cost: **~6,100 tokens** per session (skill descriptions plus
+the injected rules). Individual skills load only when invoked. The gstack skills
+are 60–170KB each, so none of them is allowed to invoke itself proactively.
+You call them by name, or Claude uses them when you clearly ask for that workflow.
 
 ## Layout
 
@@ -42,7 +44,7 @@ only when invoked.
 plugins/harry-setup/                the plugin — single source of truth
   .claude-plugin/plugin.json
   RULES.md                          injected at session start
-  skills/        (69)
+  skills/        (62)
   commands/      (6)
   hooks/                            SessionStart: rules + gstack rebuild
   scripts/

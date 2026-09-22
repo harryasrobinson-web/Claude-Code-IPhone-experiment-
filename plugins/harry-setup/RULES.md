@@ -18,19 +18,27 @@ subagents return, anything where being wrong is expensive. Subagents return
 conclusions, not file dumps — that is the point, it keeps context clean and
 cost down.
 
+Don't spawn a subagent for work that takes only a few tool calls. Every
+subagent is a separate conversation drawing on the same usage limits.
+
 ## Skills
 
-The plugin ships 69 skills in three groups:
+The plugin ships 62 skills:
 
-- **superpowers\*** (13) — brainstorming, systematic-debugging, test-driven-development,
+- **superpowers\*** (14) — brainstorming, systematic-debugging, test-driven-development,
   writing-plans, executing-plans, verification-before-completion,
   subagent-driven-development. Pure methodology, no dependencies, work everywhere.
-- **gstack-dependent** (43) — qa, browse, ship, investigate, make-pdf, design-*, plan-*.
+- **gstack-dependent** (44) — qa, browse, ship, investigate, make-pdf, design-*, plan-*.
   gstack is rebuilt automatically in the background at session start (it cannot be
   committed — its binaries exceed GitHub's 100MB file limit). Allow ~3-4 minutes on a
   fresh cloud container. Browse-backed skills reach only allowlisted hosts, so general
   web QA is unavailable in cloud sessions.
-- **mem\*** (7) — belong to the claude-mem plugin, which is not installed. Inert.
+- **council** (3) and **ui-ux-pro-max** (1).
+
+The gstack skills are very large — ship, plan-ceo-review, office-hours, review and
+the other plan-*/design-* skills are 60–170KB each, and loading one fills the
+context fast. Invoke them only when Harry asks for that workflow or clearly wants
+the full process, never as a reflex for an ordinary push, bug report or question.
 
 ## claude-council (`/ask`)
 
